@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plate &amp; Pace</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2557D6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Plate &amp; Pace">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icon-512.png">
+<style>
+:root{--bg:#EDF1F5;--surface:#fff;--ink:#17222E;--mute:#5E6E80;--line:#D8E0E8;--food:#C96F12;--foodbg:#FBEBD6;--move:#2557D6;--movebg:#DDE7FB;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111820;--surface:#1A242F;--ink:#E8EEF4;--mute:#8FA0B2;--line:#2A3644;--food:#F0A04B;--foodbg:#3A2A18;--move:#7FA6FF;--movebg:#1E2E52;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#111820;--surface:#1A242F;--ink:#E8EEF4;--mute:#8FA0B2;--line:#2A3644;--food:#F0A04B;--foodbg:#3A2A18;--move:#7FA6FF;--movebg:#1E2E52;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.4}
+main{max-width:520px;margin:0 auto;padding:16px 16px 40px}
+h1{font-size:15px;font-weight:600;margin:0;color:var(--mute)}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.date{display:flex;align-items:center;gap:6px}
+.date strong{font-size:22px;font-weight:800;min-width:150px;text-align:center}
+button{font:inherit;color:inherit;cursor:pointer}
+.ic{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.big{font-size:38px;font-weight:800;line-height:1}
+.lbl{font-size:13px;color:var(--mute);margin-top:4px}
+.bar{height:8px;border-radius:4px;background:var(--line);margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px;transition:width .3s}
+.food .big{color:var(--food)}.food .bar i{background:var(--food)}
+.move .big{color:var(--move)}.move .bar i{background:var(--move)}
+.goal{font-size:13px;color:var(--mute);margin-top:8px}
+.goal input{width:62px;font:inherit;font-weight:600;color:var(--ink);background:transparent;border:0;border-bottom:1px dashed var(--mute);padding:0 2px}
+.seg{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--line);border-radius:12px;padding:3px;margin-bottom:12px}
+.seg button{border:0;background:transparent;padding:9px;border-radius:10px;font-weight:600;color:var(--mute)}
+.seg button[aria-selected="true"]{background:var(--surface);color:var(--ink)}
+form{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px}
+input[type=text],input[type=number]{width:100%;font:inherit;font-size:16px;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+form .wide{grid-column:1/-1}
+.add{grid-column:1/-1;border:0;border-radius:10px;padding:12px;font-weight:800;color:#fff}
+.food-add{background:var(--food)}.move-add{background:var(--move)}
+:root[data-theme="dark"] .add,:root:not([data-theme="light"]) .add{color:#111820}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .add{color:#fff}}
+ul{list-style:none;margin:0;padding:0}
+li{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line)}
+li:first-child{border-top:0}
+li .n{flex:1;min-width:0;overflow-wrap:anywhere}
+li .n small{display:block;color:var(--mute);font-size:13px}
+li b{font-weight:800}
+.x{border:0;background:transparent;color:var(--mute);font-size:20px;width:32px;height:32px}
+.empty{color:var(--mute);text-align:center;padding:14px 0 4px;font-size:14px}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:110px}
+.day{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px;padding:0}
+.bars{display:flex;gap:3px;align-items:flex-end;height:80px}
+.bars i{width:9px;border-radius:3px 3px 0 0;min-height:2px}
+.bars .f{background:var(--food)}.bars .m{background:var(--move)}
+.day span{font-size:12px;color:var(--mute);padding:2px 6px;border-radius:8px}
+.day[aria-current="true"] span{background:var(--ink);color:var(--bg);font-weight:600}
+.key{display:flex;gap:14px;font-size:12px;color:var(--mute);margin-top:10px}
+.key s{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;text-decoration:none}
+.streak{display:flex;align-items:baseline;gap:10px;padding:12px 16px}.streak b{font-size:28px;font-weight:800;color:var(--move)}.streak span{color:var(--mute);font-size:14px}
+.wsum{display:flex;gap:28px;margin:10px 0 4px}.wsum b{display:block;font-size:22px;font-weight:800}.wsum span{font-size:13px;color:var(--mute)}
+.spark{width:100%;height:80px;margin:8px 0}
+.unit{border:1px solid var(--line);background:transparent;border-radius:10px;padding:8px 12px;margin-top:10px;color:var(--mute)}
+:focus-visible{outline:2px solid var(--move);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <h1>Plate &amp; Pace</h1>
+  </div>
+  <div class="top" style="justify-content:center">
+    <div class="date">
+      <button class="ic" id="prev" aria-label="Previous day">‹</button>
+      <strong id="dlabel"></strong>
+      <button class="ic" id="next" aria-label="Next day">›</button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <div class="card food"><div class="big" id="cal">0</div><div class="lbl">calories eaten</div><div class="bar"><i id="calbar"></i></div><div class="goal">Goal <input id="goal" type="number" inputmode="numeric" min="0" aria-label="Daily calorie goal"></div></div>
+    <div class="card move"><div class="big" id="min">0</div><div class="lbl">minutes active</div><div class="bar"><i id="minbar"></i></div><div class="goal" id="burn">0 cal burned</div></div>
+  </section>
+
+  <div class="card streak" id="streak"></div>
+
+  <div class="seg" role="tablist">
+    <button role="tab" id="tf" aria-selected="true">Food</button>
+    <button role="tab" id="tw" aria-selected="false">Workouts</button>
+    <button role="tab" id="tg" aria-selected="false">Weight</button>
+  </div>
+
+  <section class="card" id="panel"></section>
+
+  <section class="card">
+    <div class="week" id="week"></div>
+    <div class="key"><span><s style="background:var(--food)"></s>Calories</span><span><s style="background:var(--move)"></s>Active minutes</span></div>
+  </section>
+</main>
+
+<script>
+const KEY = 'plate-and-pace-v1';
+let db = { goal: 2000, days: {}, weights: {}, unit: 'lb' };
+try { const r = localStorage.getItem(KEY); if (r) db = Object.assign(db, JSON.parse(r)); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch (e) {} };
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iso = d => d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+let cur = new Date(); cur.setHours(12,0,0,0);
+let tab = 'food';
+const day = k => db.days[k] || (db.days[k] = { food: [], work: [] });
+const sum = (a, f) => a.reduce((t, x) => t + (+x[f] || 0), 0);
+
+function label(d) {
+  const t = new Date(); t.setHours(12,0,0,0);
+  const diff = Math.round((d - t) / 864e5);
+  if (diff === 0) return 'Today';
+  if (diff === -1) return 'Yesterday';
+  if (diff === 1) return 'Tomorrow';
+  return d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+function streaks() {
+  const has = k => db.days[k] && sum(db.days[k].work, 'm') > 0;
+  let c = 0, x = new Date(); x.setHours(12,0,0,0);
+  if (!has(iso(x))) x.setDate(x.getDate() - 1);
+  while (has(iso(x))) { c++; x.setDate(x.getDate() - 1); }
+  let best = 0, run = 0, prev = null;
+  Object.keys(db.days).filter(has).sort().forEach(k => {
+    const [y, m, d] = k.split('-').map(Number), dt = new Date(y, m - 1, d, 12);
+    run = prev && Math.round((dt - prev) / 864e5) === 1 ? run + 1 : 1;
+    best = Math.max(best, run); prev = dt;
+  });
+  return { c, best };
+}
+
+function weightPanel(k) {
+  const w = db.weights, u = db.unit, keys = Object.keys(w).sort(), here = w[k];
+  let h = `<form id="f"><input class="wide" type="number" name="w" step="0.1" min="0" inputmode="decimal" placeholder="Weight in ${u}" value="${here ?? ''}" required><button class="add move-add">${here ? 'Update weight' : 'Save weight'}</button></form>`;
+  if (keys.length) {
+    const vals = keys.map(x => w[x]), first = vals[0], last = vals[vals.length - 1], ch = Math.round((last - first) * 10) / 10;
+    h += `<div class="wsum"><div><b>${last} ${u}</b><span>latest</span></div><div><b>${ch > 0 ? '+' : ''}${ch} ${u}</b><span>since ${first} ${u}</span></div></div>`;
+    if (keys.length > 1) {
+      const pts = keys.slice(-30).map(x => w[x]), lo = Math.min(...pts), hi = Math.max(...pts), rg = hi - lo || 1;
+      const p = pts.map((v, i) => (6 + i / (pts.length - 1) * 288).toFixed(1) + ',' + (74 - (v - lo) / rg * 68).toFixed(1)).join(' ');
+      h += `<svg viewBox="0 0 300 80" class="spark" role="img" aria-label="Weight trend"><polyline points="${p}" fill="none" style="stroke:var(--move)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    }
+    h += '<ul>' + keys.slice(-5).reverse().map(x => `<li><div class="n">${new Date(x + 'T12:00').toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</div><b>${w[x]} ${u}</b><button class="x" data-k="${x}" aria-label="Delete entry for ${x}">×</button></li>`).join('') + '</ul>';
+  } else h += '<div class="empty">No weigh-ins yet. Save your first one above.</div>';
+  h += `<button class="unit" id="unit">Switch to ${u === 'lb' ? 'kg' : 'lb'}</button>`;
+  $('panel').innerHTML = h;
+  $('f').onsubmit = e => {
+    e.preventDefault();
+    const v = parseFloat(new FormData(e.target).get('w'));
+    if (!(v > 0)) return;
+    w[k] = Math.round(v * 10) / 10; save(); render();
+  };
+  $('panel').querySelectorAll('.x').forEach(b => b.onclick = () => { delete w[b.dataset.k]; save(); render(); });
+  $('unit').onclick = () => {
+    const f = u === 'lb' ? 0.45359237 : 1 / 0.45359237;
+    Object.keys(w).forEach(x => w[x] = Math.round(w[x] * f * 10) / 10);
+    db.unit = u === 'lb' ? 'kg' : 'lb'; save(); render();
+  };
+}
+
+function render() {
+  const k = iso(cur), d = day(k);
+  const cal = sum(d.food, 'c'), min = sum(d.work, 'm'), burn = sum(d.work, 'b');
+  $('dlabel').textContent = label(cur);
+  $('cal').textContent = cal.toLocaleString();
+  $('min').textContent = min;
+  $('burn').textContent = burn + ' cal burned';
+  $('calbar').style.width = Math.min(100, db.goal ? cal / db.goal * 100 : 0) + '%';
+  $('minbar').style.width = Math.min(100, min / 30 * 100) + '%';
+  $('goal').value = db.goal;
+  const s = streaks();
+  $('streak').innerHTML = s.c ? `<b>${s.c}</b><span>day workout streak · best ${s.best}</span>` : `<span>Log a workout today to start a streak.${s.best ? ' Your best is ' + s.best + (s.best === 1 ? ' day.' : ' days.') : ''}</span>`;
+  $('tf').setAttribute('aria-selected', tab === 'food');
+  $('tw').setAttribute('aria-selected', tab === 'work');
+  $('tg').setAttribute('aria-selected', tab === 'weight');
+
+  if (tab === 'weight') { weightPanel(k); } else {
+  const items = tab === 'food' ? d.food : d.work;
+  const form = tab === 'food'
+    ? `<form id="f"><input class="wide" type="text" name="n" placeholder="What did you eat?" required maxlength="60" autocomplete="off"><input type="number" name="c" placeholder="Calories" inputmode="numeric" min="0" required><input type="number" name="p" placeholder="Protein (g)" inputmode="numeric" min="0"><button class="add food-add">Add meal</button></form>`
+    : `<form id="f"><input class="wide" type="text" name="n" placeholder="What did you do?" required maxlength="60" autocomplete="off"><input type="number" name="m" placeholder="Minutes" inputmode="numeric" min="1" required><input type="number" name="b" placeholder="Calories burned" inputmode="numeric" min="0"><button class="add move-add">Add workout</button></form>`;
+  const list = items.length
+    ? '<ul>' + items.map(x => tab === 'food'
+        ? `<li><div class="n">${esc(x.n)}${x.p ? `<small>${x.p} g protein</small>` : ''}</div><b>${x.c} cal</b><button class="x" data-id="${x.id}" aria-label="Delete ${esc(x.n)}">×</button></li>`
+        : `<li><div class="n">${esc(x.n)}${x.b ? `<small>${x.b} cal burned</small>` : ''}</div><b>${x.m} min</b><button class="x" data-id="${x.id}" aria-label="Delete ${esc(x.n)}">×</button></li>`).join('') + '</ul>'
+    : `<div class="empty">${tab === 'food' ? 'No meals logged yet. Add your first one above.' : 'No workouts logged yet. Add one above.'}</div>`;
+  $('panel').innerHTML = form + list;
+
+  $('f').onsubmit = e => {
+    e.preventDefault();
+    const f = new FormData(e.target), n = f.get('n').trim();
+    if (!n) return;
+    const id = Date.now() + Math.random().toString(36).slice(2, 5);
+    if (tab === 'food') d.food.push({ id, n, c: +f.get('c') || 0, p: +f.get('p') || 0 });
+    else d.work.push({ id, n, m: +f.get('m') || 0, b: +f.get('b') || 0 });
+    save(); render();
+  };
+  $('panel').querySelectorAll('.x').forEach(b => b.onclick = () => {
+    const arr = tab === 'food' ? d.food : d.work;
+    arr.splice(arr.findIndex(x => x.id === b.dataset.id), 1);
+    save(); render();
+  });
+
+  }
+  // week strip: the 7 days ending on the selected day
+  const days = [];
+  for (let i = 6; i >= 0; i--) { const x = new Date(cur); x.setDate(x.getDate() - i); days.push(x); }
+  const maxC = Math.max(db.goal || 0, ...days.map(x => sum(day(iso(x)).food, 'c')), 1);
+  const maxM = Math.max(60, ...days.map(x => sum(day(iso(x)).work, 'm')));
+  $('week').innerHTML = days.map(x => {
+    const dd = day(iso(x));
+    const fc = sum(dd.food, 'c'), wm = sum(dd.work, 'm');
+    return `<button class="day" data-d="${iso(x)}" ${iso(x) === k ? 'aria-current="true"' : ''} aria-label="${x.toDateString()}: ${fc} calories, ${wm} minutes"><div class="bars"><i class="f" style="height:${fc / maxC * 100}%"></i><i class="m" style="height:${wm / maxM * 100}%"></i></div><span>${x.toLocaleDateString(undefined, { weekday: 'narrow' })}</span></button>`;
+  }).join('');
+  $('week').querySelectorAll('.day').forEach(b => b.onclick = () => {
+    const [y, m, dn] = b.dataset.d.split('-').map(Number);
+    cur = new Date(y, m - 1, dn, 12); render();
+  });
+}
+
+$('prev').onclick = () => { cur.setDate(cur.getDate() - 1); render(); };
+$('next').onclick = () => { cur.setDate(cur.getDate() + 1); render(); };
+$('tf').onclick = () => { tab = 'food'; render(); };
+$('tw').onclick = () => { tab = 'work'; render(); };
+$('tg').onclick = () => { tab = 'weight'; render(); };
+$('goal').onchange = e => { db.goal = Math.max(0, +e.target.value || 0); save(); render(); };
+render();
+if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js").catch(() => {}); }
+</script>
+</body>
+</html>
